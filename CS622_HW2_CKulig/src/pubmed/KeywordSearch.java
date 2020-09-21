@@ -1,18 +1,16 @@
 //CKulig BU CS 622 HW2 9/20
 package pubmed;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.File; 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Scanner;
-import java.util.zip.GZIPInputStream;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
 
 
 public class KeywordSearch {
@@ -22,20 +20,28 @@ public class KeywordSearch {
 //		 Locations of source and target files for decompression
 		String unmergedSourceFolder = "C:\\Users\\Chris\\Documents\\BU Classes\\CS 622 Advanced Programming\\CS622_HW2\\pubmed\\Unmerged Source\\";
 		String targetFile = "C:\\Users\\Chris\\Documents\\BU Classes\\CS 622 Advanced Programming\\CS622_HW2\\pubmed\\mergedXMLDoc.xml";
-		Path sourceDecompress = Paths.get("C:\\Users\\Chris\\Documents\\BU Classes\\CS 622 Advanced Programming\\CS622_HW2\\pubmed\\pubmed20n1025.xml.gz");
+		Path sourceDecompress = Paths.get("C:\\Users\\Chris\\Documents\\BU Classes\\CS 622 Advanced Programming\\CS622_HW2_CKulig\\pubmed\\pubmed20n1018.xml.gz");
 		Path targetDecompress = Paths.get("C:\\Users\\Chris\\Documents\\BU Classes\\CS 622 Advanced Programming\\CS622_HW2\\pubmed\\pubmed20n1025_unzipped.xml");
-                     
+		
        String keywordToSearch = "";
        String selectedOption = "-1";
        Scanner scanner = new Scanner(System.in); 
+       
+       SortedMap<String, LocalDateTime> searchTermMap = new TreeMap<>();
+       
+       
        System.out.println("Enter command:");
 		 selectedOption = scanner.nextLine();
 		    while(selectedOption != "0"){
 		    	switch (selectedOption) {
-		    	case "1":
-		    		System.out.println("Hold for unzip");
+		    	case "1":		    		
 		    		try {
-						decompressGzip(sourceDecompress, targetDecompress);
+		    			System.out.println("Enter path of the file to unzip.");
+		    			sourceDecompress =  Paths.get(scanner.nextLine());
+		    			System.out.println("Enter path of the target file.");
+		    			targetDecompress =  Paths.get(scanner.nextLine());
+		    			System.out.println("Hold for unzip");
+		    			DecompressZip.decompressGzip(sourceDecompress, targetDecompress);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}	 
@@ -43,12 +49,21 @@ public class KeywordSearch {
 		    	case "2": 
 		    		System.out.println("What term would youl like to search on:");
 		    		keywordToSearch = scanner.nextLine();
+		    		searchTermMap.put(keywordToSearch,  java.time.LocalDateTime.now());
 		    		keywordSearch(targetFile, keywordToSearch);
 		    		break;
 		    	case "3":
+		    		System.out.println("Enter path of the folder containing the unmerged files.");
+		    		unmergedSourceFolder =  scanner.nextLine();
+	    			System.out.println("Enter path of the target file.");
+	    			targetFile =  scanner.nextLine();
 		    		MergeXML mergeXML = new MergeXML(unmergedSourceFolder, targetFile);
 		    		mergeXML.mergeXMLDocuments();
 		    		break;	
+		    	case "4":
+		    		System.out.println("Searched entries ");
+		    	     for (SortedMap.Entry<String,LocalDateTime> entry : searchTermMap.entrySet())  
+		    	            System.out.println("Term: " + entry.getKey() + " -" + entry.getValue()); 
 		    	}	
 		   	 System.out.println("Enter command:");
 			 selectedOption = scanner.nextLine(); 
@@ -66,24 +81,7 @@ public class KeywordSearch {
 			ex.printStackTrace();
 		}	
 	}
-	
-	// This is used to unzip .gz files takes a source and target document path as arguments
-    public static void decompressGzip(Path source, Path target) throws IOException {    	
-        if (Files.notExists(source)) {
-	           System.err.printf("The path %s doesn't exist!", source);
-	           return;
-	       }
-	       
-        try (GZIPInputStream gis = new GZIPInputStream(
-                                      new FileInputStream(source.toFile()));
-             FileOutputStream fos = new FileOutputStream(target.toFile())) {
-            byte[] buffer = new byte[1024];
-            int len;
-            while ((len = gis.read(buffer)) > 0) {
-                fos.write(buffer, 0, len);
-            }
-        }
-    }
+
     
     public static void printMenu() {
     	System.out.println("Welcome to the PubMed ");

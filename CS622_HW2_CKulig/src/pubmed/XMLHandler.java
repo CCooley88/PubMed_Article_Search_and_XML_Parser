@@ -75,7 +75,7 @@ public class XMLHandler extends DefaultHandler{
 			String keywordText = new String(chars, start, length);
 			if(keywordText.toLowerCase().contains(keywordToSearch.toLowerCase()) && articlePrinted == false) {
 				System.out.println("Title:" + articleTitleForPrint);
-				System.out.println("ISSN:" + issnForPrint + " Date Printed:" + pubDateForPrint);
+				System.out.println("  ISSN:" + issnForPrint + " Date Printed:" + pubDateForPrint);
 				articlePrinted = true;
 			}
 			keyword = false;
