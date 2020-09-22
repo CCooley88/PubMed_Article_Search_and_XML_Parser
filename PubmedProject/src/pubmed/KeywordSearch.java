@@ -12,7 +12,7 @@ import java.util.TreeMap;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-//TEST ABCDEF
+
 public class KeywordSearch {
 	
 	public static void main(String[] args) {
@@ -27,6 +27,7 @@ public class KeywordSearch {
        String selectedOption = "-1";
        Scanner scanner = new Scanner(System.in); 
        
+//       Keeps track of searched words with key value pairs for the word and the time-stamp of the search
        SortedMap<String, LocalDateTime> searchTermMap = new TreeMap<>();
        
        
@@ -63,7 +64,7 @@ public class KeywordSearch {
 		    	case "4":
 		    		System.out.println("Searched entries ");
 		    	     for (SortedMap.Entry<String,LocalDateTime> entry : searchTermMap.entrySet())  
-		    	            System.out.println("Term: " + entry.getKey() + " -" + entry.getValue()); 
+		    	            System.out.println("Term: " + entry.getKey() + " on " + entry.getValue()); 
 		    	}	
 		   	 System.out.println("Enter command:");
 			 selectedOption = scanner.nextLine(); 
@@ -86,7 +87,7 @@ public class KeywordSearch {
     public static void printMenu() {
     	System.out.println("Welcome to the PubMed ");
     }
-
+ 
 }
 
 
