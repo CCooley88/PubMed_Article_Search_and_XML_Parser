@@ -26,10 +26,10 @@ public class KeywordSearch {
        String keywordToSearch = "";
        String selectedOption = "-1";
        Scanner scanner = new Scanner(System.in); 
-       
-//       Keeps track of searched words with key value pairs for the word and the time-stamp of the search
-       SortedMap<String, LocalDateTime> searchTermMap = new TreeMap<>();
-       
+       SearchHistory searchHistory = new SearchHistory();
+
+       System.out.println("Welcome to the PubMed topic searcher. Options as follows:");
+       printMenu();
        
        System.out.println("Enter command:");
 		 selectedOption = scanner.nextLine();
@@ -47,25 +47,25 @@ public class KeywordSearch {
 						e.printStackTrace();
 					}	 
 		    		break;
-		    	case "2": 
-		    		System.out.println("What term would youl like to search on:");
-		    		keywordToSearch = scanner.nextLine();
-		    		searchTermMap.put(keywordToSearch,  java.time.LocalDateTime.now());
-		    		keywordSearch(targetFile, keywordToSearch);
-		    		break;
-		    	case "3":
+		    	case "2":
 		    		System.out.println("Enter path of the folder containing the unmerged files.");
 		    		unmergedSourceFolder =  scanner.nextLine();
 	    			System.out.println("Enter path of the target file.");
 	    			targetFile =  scanner.nextLine();
 		    		MergeXML mergeXML = new MergeXML(unmergedSourceFolder, targetFile);
 		    		mergeXML.mergeXMLDocuments();
-		    		break;	
+		    		break;
+		    	case "3": 
+		    		System.out.println("What term would youl like to search for:");
+		    		keywordToSearch = scanner.nextLine();
+		    		searchHistory.addNewNode(keywordToSearch);
+		    		keywordSearch(targetFile, keywordToSearch);
+		    		break;		    		
 		    	case "4":
-		    		System.out.println("Searched entries ");
-		    	     for (SortedMap.Entry<String,LocalDateTime> entry : searchTermMap.entrySet())  
-		    	            System.out.println("Term: " + entry.getKey() + " on " + entry.getValue()); 
+		    		searchHistory.printAllNodesAndTimes();
 		    	}	
+		    	System.out.println();
+		     printMenu();
 		   	 System.out.println("Enter command:");
 			 selectedOption = scanner.nextLine(); 
 		    }		    
@@ -84,8 +84,11 @@ public class KeywordSearch {
 	}
 
     
-    public static void printMenu() {
-    	System.out.println("Welcome to the PubMed ");
+    public static void printMenu() {    	
+    	System.out.println("1 - Unzip files");
+    	System.out.println("2 - Merge XML documents");
+    	System.out.println("3 - Search for a term");
+    	System.out.println("4 - View search history");
     }
  
 }
