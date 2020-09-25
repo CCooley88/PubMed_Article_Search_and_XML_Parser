@@ -16,6 +16,5 @@ KeywordSearch
 XMLHandler
 - Manages the callbacks for the parsing the XML document using SAX parser
 
-
 MergeXML
 - Opens the specified folder and merges two XML documents into one at a specified file location
